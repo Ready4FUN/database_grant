@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Таблица с данными</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
+    <script src="{{ url_for('custom_static', filename='main.js') }}"></script>
+</head>
+<body>
+    <div class="header-container">
+        <h1>Просмотр данных</h1>
+        <div class="button-container">
+            <button class="button-37" role="button" onclick="showPopup()">Добавить данные</button>
+            <button class="button-37" role="button" onclick="changeData()">Изменить данные</button>
+        </div>
+    </div>
+
+
+
+    <section class="wrapper">
+        <main class="row title">
+            <ul>
+                <li class="id">ID</li>
+                <li>Класс</li>
+                <li>Культура</li>
+                <li>Повреждения</li>
+                <li>болезнь</li>
+            </ul>
+        </main>
+            {% for item in data %}
+            <article class="row" onclick="toggleRow(this, '{{ item.id }}' )"  data-id="{{ item.id }}">
+                    <ul >
+                        <li class="id">{{ item.id }}</li>
+                        <li>{{ item.class_name }}</li>
+                        <li>{{ item.culture }}</li>
+                        <li>{{ item.damage }}</li>
+                        <li>{{ item.disease }}</li>
+                    </ul>
+                    {% if item.description %}
+                    <ul class="more-content">
+                        <li>Описание болезни: {{ item.description }}</li>
+                    </ul>
+                    {% endif %}
+                    <ul class="spectrum">
+                        <li>ИФ спектр: {{ item.ir_spectrum }}</li>
+                        <li>HDR спектр: {{ item.uv_spectrum }}</li>
+                        <li>Видимый спектр:{{ item.visible_spectrum }}</li>
+                    </ul>
+                    <ul class="image">
+                        {% if item.ir_image_url %}
+                            <li><img src="{{ item.ir_image_url }}" alt=""></li>
+                        {% endif %}
+                        {% if item.uv_image_url %}
+                            <li><img src="{{ item.uv_image_url }}" alt=""></li>
+                        {% endif %}
+                        {% if item.visible_image_url %}
+                            <li><img src="{{ item.visible_image_url }}" alt=""></li>
+                        {% endif %}
+                    </ul>
+                </article>
+            {% endfor %}
+    </section>
+
+    <div id="popup" class="login-box">
+        <h1>Добавить данные</h1>
+        <span class="close-button" onclick="hidePopup()">✖</span>
+
+        <form method="post" enctype="multipart/form-data" action="/process_data">
+            {{ form.hidden_tag() }}
+                {{ form.class_name.label }} 
+                {{ form.class_name() }}
+                {{ form.culture.label }} {{ form.culture() }}
+                {{ form.damage.label }} {{ form.damage() }}
+                {{ form.disease.label }} {{ form.disease() }}
+                {{ form.description.label }} {{ form.description() }}
+                {{ form.ir_spectrum.label }} {{ form.ir_spectrum() }}
+                {{ form.uv_spectrum.label }} {{ form.uv_spectrum() }}
+                {{ form.visible_spectrum.label }} {{ form.visible_spectrum() }}
+                {{ form.ir_file.label }}  
+                {{ form.ir_file() }}
+                {{ form.uv_file.label }} 
+                {{ form.uv_file() }}
+                {{ form.visible_image.label }} 
+                {{ form.visible_image() }}
+            {{ form.submit() }}
+        </form>
+    </div>
+</body>
+</html>
